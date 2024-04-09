@@ -42,12 +42,10 @@ class AuthService extends HelpEnv {
         else user.verify_mobile = false;
         await user.save();
         const otp = await this.remakeOtp(user._id, method);
-        const kavenegar = await this.reqToKavenagar(user.mobile, otp.code);
         return {
-            // message: authMessage.otpSent,
-            // code: otp.code,
-            // userId: user._id,
-            kavenegar
+            message: authMessage.otpSent,
+            code: otp.code,
+            userId: user._id,
         }
     }
 
@@ -62,12 +60,10 @@ class AuthService extends HelpEnv {
         const otp = await this.makeOtp(user._id, method);
         user.otp = otp._id;
         await user.save();
-        const kavenegar = await this.reqToKavenagar(user.mobile, otp.code);
         return {
-            // message: authMessage.otpSent,
-            // code: otp.code,
-            // userId: user._id,
-            kavenegar
+            message: authMessage.otpSent,
+            code: otp.code,
+            userId: user._id,
         }
     }
     // ================================ end register =========================================================
@@ -117,16 +113,16 @@ class AuthService extends HelpEnv {
         return this.#userRepository.findOne(query);
     }
 
-    async reqToKavenagar(receptor, token) {
-        const data = {
-            receptor,
-            token,
-            template: "register",
-            type: "sms",
-        }
-        const status = await axios.post(`https://api.kavenegar.com/v1/${process.env.API_KEY}/verify/lookup.json`, data);
-        return status;
-    }
+    // async reqToKavenagar(receptor, token) {
+    //     const data = {
+    //         receptor,
+    //         token,
+    //         template: "register",
+    //         type: "sms",
+    //     }
+    //     const status = await axios.post(`https://api.kavenegar.com/v1/${process.env.API_KEY}/verify/lookup.json`, data);
+    //     return status;
+    // }
 
     async makeOtp(userId, method) {
         const otpOptions = generateOtp(userId, method);
